@@ -1,30 +1,30 @@
 import React, { useState } from "react";
-import TutorialDataService from "../services/TutorialService";
+import PostDataService from "../services/PostService";
 
-const AddTutorial = () => {
-  const initialTutorialState = {
+const AddPost = () => {
+  const initialPostState = {
     id: null,
     title: "",
     description: "",
     published: false
   };
-  const [tutorial, setTutorial] = useState(initialTutorialState);
+  const [post, setPost] = useState(initialPostState);
   const [submitted, setSubmitted] = useState(false);
 
   const handleInputChange = event => {
     const { name, value } = event.target;
-    setTutorial({ ...tutorial, [name]: value });
+    setPost({ ...post, [name]: value });
   };
 
-  const saveTutorial = () => {
+  const savePost = () => {
     var data = {
-      title: tutorial.title,
-      description: tutorial.description
+      title: post.title,
+      description: post.description
     };
 
-    TutorialDataService.create(data)
+    PostDataService.create(data)
       .then(response => {
-        setTutorial({
+        setPost({
           id: response.data.id,
           title: response.data.title,
           description: response.data.description,
@@ -38,8 +38,8 @@ const AddTutorial = () => {
       });
   };
 
-  const newTutorial = () => {
-    setTutorial(initialTutorialState);
+  const newPost = () => {
+    setPost(initialPostState);
     setSubmitted(false);
   };
 
@@ -48,7 +48,7 @@ const AddTutorial = () => {
       {submitted ? (
         <div>
           <h4>You submitted successfully!</h4>
-          <button className="btn btn-success" onClick={newTutorial}>
+          <button className="btn btn-success" onClick={newPost}>
             Add
           </button>
         </div>
@@ -61,7 +61,7 @@ const AddTutorial = () => {
               className="form-control"
               id="title"
               required
-              value={tutorial.title}
+              value={post.title}
               onChange={handleInputChange}
               name="title"
             />
@@ -74,13 +74,13 @@ const AddTutorial = () => {
               className="form-control"
               id="description"
               required
-              value={tutorial.description}
+              value={post.description}
               onChange={handleInputChange}
               name="description"
             />
           </div>
 
-          <button onClick={saveTutorial} className="btn btn-success">
+          <button onClick={savePost} className="btn btn-success">
             Submit
           </button>
         </div>
@@ -89,4 +89,4 @@ const AddTutorial = () => {
   );
 };
 
-export default AddTutorial;
+export default AddPost;
