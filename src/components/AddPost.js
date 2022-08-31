@@ -6,12 +6,13 @@ const AddPost = () => {
     id: null,
     title: "",
     description: "",
-    published: false
+    published: false,
   };
   const [post, setPost] = useState(initialPostState);
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState(false);
 
-  const handleInputChange = event => {
+  const handleInputChange = (event) => {
     const { name, value } = event.target;
     setPost({ ...post, [name]: value });
   };
@@ -19,22 +20,23 @@ const AddPost = () => {
   const savePost = () => {
     var data = {
       title: post.title,
-      description: post.description
+      description: post.description,
     };
 
     PostDataService.create(data)
-      .then(response => {
+      .then((response) => {
         setPost({
           id: response.data.id,
           title: response.data.title,
           description: response.data.description,
-          published: response.data.published
+          published: response.data.published,
         });
         setSubmitted(true);
         console.log(response.data);
       })
-      .catch(e => {
+      .catch((e) => {
         console.log(e);
+        setError(true)
       });
   };
 
@@ -45,7 +47,14 @@ const AddPost = () => {
 
   return (
     <div className="submit-form">
-      {submitted ? (
+      {error ? (
+        <div>
+          <h4>something went wrong!</h4>
+          <button className="btn btn-success" onClick={newPost}>
+            Add
+          </button>
+        </div>
+      ) : submitted ? (
         <div>
           <h4>You submitted successfully!</h4>
           <button className="btn btn-success" onClick={newPost}>
@@ -80,7 +89,7 @@ const AddPost = () => {
             />
           </div>
 
-          <button onClick={savePost} className="btn btn-success">
+          <button onClick={savePost} className="btn btn-success" data-testid="submit">
             Submit
           </button>
         </div>
