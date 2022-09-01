@@ -1,8 +1,22 @@
 /// <reference types="cypress" />
 
-describe("Post Application", () => {
-  it("should render application", () => {
-    cy.visit("http://localhost:8081");
+describe("Home page", () => {
+  beforeEach(() => {
+    cy.intercept(
+      {
+        method: "GET",
+        url: "/posts",
+      },
+      {
+        statusCode: 200,
+        fixture: "posts.json",
+      }
+    );
+    cy.visit("/");
+  });
+
+  it("should render the home page", () => {
+    // cy.visit("/")
     // cy.contains("Shaktiman").should("exist");
     // cy.get("#id  .class")
     cy.get(".navbar-brand").should("have.text", "Shaktiman");
@@ -10,70 +24,88 @@ describe("Post Application", () => {
     cy.get(".navbar-nav > li").should("have.length", 2);
   });
 
-  describe("Post Form", () => {
-    it("should render post form", () => {
-      cy.contains("Add").click();
+  it("should render the all compomnents", () => {
+    // cy.visit("/")
+    cy.get("input").should("exist");
+    cy.get(".btn-outline-secondary").should("exist");
 
-      cy.url().should("include", "/add");
+    cy.get("table").should("exist");
+    cy.get(".btn-danger").should("exist");
+  });
+  describe("Posts Table", () => {
+    it("should render 2 rows", () => {
+      cy.get("table > tbody").find("tr").should("have.length", 2);
     });
 
-    it("should render all fields", () => {
-      cy.get("#title").should("exist");
-      cy.get("#description").should("exist");
-      cy.get(".btn-success").should("exist");
+    it("Each row should have 2 buttons", () => {
+      cy.get("table > tbody")
+        .find("tr")
+        .eq(0)
+        .find("td")
+        .eq(3)
+        .find("button")
+        .should("have.length", 2);
+    });
+    it("should display correct data", () => {
+      cy.get("table > tbody")
+        .find("tr")
+        .eq(0)
+        .find("td")
+        .eq(0)
+        .contains("harry");
 
-      cy.contains("something went wrong!").should("not.exist");
-      cy.contains("You submitted successfully!").should("not.exist");
+      cy.get("table > tbody")
+        .find("tr")
+        .eq(0)
+        .find("td")
+        .eq(1)
+        .contains("potter1");
+    });
+  });
+
+  describe("Home Page Actions", () => {
+    describe("Search form action", () => {
+      it("should filter the table ", () => {
+        const fieldVal = "voldemort";
+        cy.get("input").type(fieldVal).should("have.value", fieldVal);
+
+        cy.intercept(
+          {
+            method: "GET",
+            url: "/posts?title=" + fieldVal,
+          },
+          {
+            statusCode: 200,
+            fixture: "filter-posts.json",
+          }
+        );
+        cy.get(".btn-outline-secondary").click();
+
+        cy.get("table > tbody").find("tr").should("have.length", 1);
+      });
     });
 
-    it("should fill fields", () => {
-      cy.get("#title").type("harry").should("have.value", "harry");
-      cy.get("#description").type("potter").should("have.value", "potter");
+    describe("Table action", () => {
+        it("should redirect to edit page", () => {
+            const id = 2
+            cy.intercept(
+                {
+                  method: "GET",
+                  url: "/posts/" + id,
+                },
+                {
+                  statusCode: 200,
+                  fixture: "post.json",
+                }
+              );
+            cy.get("table > tbody").find("tr").eq(0).find("td").eq(3).find("button").eq(0).click()
+            cy.url().should("include", "posts/"+ id)
 
-    });
 
-    describe("Form Submit", () => {
-
-      beforeEach(() => {
-        cy.visit("http://localhost:8081/add")
-      })
-
-      it("should show error message", () => {
-        cy.intercept({
-          method: "POST",
-          url: "/posts"
-        }, {
-          statusCode: 500,
-          fixture: "posts.json"
+            cy.get("#title").should("have.value", "harry");
+            cy.get("#description").should("have.value", "potter1");
+            
         })
-    
-        cy.get(".btn-success").click();
-    
-        cy.contains("something went wrong!").should("exist");
-        cy.get("#title").should("not.exist");
-        cy.get("#description").should("not.exist");
-    
-        cy.get("button[data-testid='submit']").should("not.exist");
-      })
-    
-      it("should show success message", () => {
-        cy.intercept({
-          method: "POST",
-          url: "/posts"
-        }, {
-          statusCode: 200,
-          fixture: "posts.json"
-        })
-    
-        cy.get(".btn-success").click();
-    
-        cy.contains("You submitted successfully!").should("exist");
-        cy.get("#title").should("not.exist");
-        cy.get("#description").should("not.exist");
-    
-        cy.get("button[data-testid='submit']").should("not.exist");
-      })
     })
-  
   });
 });

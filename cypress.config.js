@@ -5,6 +5,7 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
+    baseUrl: "http://localhost:8081/",
   },
 
   component: {
@@ -13,4 +14,5 @@ module.exports = defineConfig({
       bundler: "webpack",
     },
   },
+ 
 });

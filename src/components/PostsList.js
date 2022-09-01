@@ -100,13 +100,13 @@ const PostsList = (props) => {
           const rowIdx = props.row.id;
           return (
             <div>
-              <span onClick={() => openPost(rowIdx)}>
+              <button onClick={() => openPost(rowIdx)}>
                 <i className="far fa-edit action mr-2"></i>
-              </span>
+              </button>
 
-              <span onClick={() => deletePost(rowIdx)}>
+              <button onClick={() => deletePost(rowIdx)}>
                 <i className="fas fa-trash action"></i>
-              </span>
+              </button>
             </div>
           );
         },
