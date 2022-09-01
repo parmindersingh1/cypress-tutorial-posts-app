@@ -15,6 +15,19 @@ npm install
 yarn install
 ```
 
+and for backend
+```
+npm install -g json-server
+```
+
+In the project directory, you can run:
+
+```
+ json-server db.json
+
+```
+
+
 or
 
 ### Compiles and hot-reloads for development
@@ -28,3 +41,10 @@ yarn start
 Open [http://localhost:8081](http://localhost:8081) to view it in the browser.
 
 The page will reload if you make edits.
+
+DOCS
+
+```
+https://docs.cypress.io/guides/references/assertions#Chai
+https://docs.cypress.io/api/commands/should#Syntax
+```
