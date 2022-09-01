@@ -48,3 +48,9 @@ DOCS
 https://docs.cypress.io/guides/references/assertions#Chai
 https://docs.cypress.io/api/commands/should#Syntax
 ```
+
+youtube
+
+```
+https://www.youtube.com/watch?v=jX3v3N6oN5M&ab_channel=LambdaTest
+```
